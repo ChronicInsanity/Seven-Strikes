@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NEBCU — Evidence Database</title>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #04080f;
+    --surface: #080f1a;
+    --surface2: #0c1525;
+    --border: #1a2e4a;
+    --border2: #1f3a5a;
+    --blue: #1a6fa8;
+    --blue-bright: #2a8fd0;
+    --blue-dim: #0e4a70;
+    --text: #b8d4e8;
+    --text-dim: #5a7a96;
+    --text-bright: #d8edf8;
+    --accent: #00aaff;
+    --danger: #ff4444;
+    --mono: 'Share Tech Mono', monospace;
+    --ui: 'Rajdhani', sans-serif;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--ui);
+    font-size: 15px;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* scanline overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0,0,0,0.04) 2px,
+      rgba(0,0,0,0.04) 4px
+    );
+    pointer-events: none;
+    z-index: 1000;
+  }
+
+  .shell {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem 4rem;
+  }
+
+  /* Header */
+  .header {
+    border-bottom: 1px solid var(--border2);
+    padding-bottom: 1.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .header-top {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .badge {
+    width: 48px;
+    height: 48px;
+    border: 2px solid var(--blue-bright);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    position: relative;
+  }
+
+  .badge::before {
+    content: '';
+    position: absolute;
+    inset: 3px;
+    border-radius: 50%;
+    border: 1px solid var(--blue-dim);
+  }
+
+  .badge svg {
+    width: 20px;
+    height: 20px;
+    fill: var(--blue-bright);
+  }
+
+  .agency-name {
+    font-family: var(--mono);
+    font-size: 1.4rem;
+    color: var(--accent);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .agency-sub {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    color: var(--text-dim);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    margin-top: 2px;
+  }
+
+  .status-bar {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    color: var(--text-dim);
+    letter-spacing: 0.1em;
+  }
+
+  .status-dot {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #00cc66;
+    margin-right: 5px;
+    animation: pulse 2.5s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  /* Search area */
+  .search-section {
+    margin-bottom: 2rem;
+  }
+
+  .search-label {
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    color: var(--text-dim);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+    display: block;
+  }
+
+  .search-row {
+    display: flex;
+    gap: 0;
+    border: 1px solid var(--border2);
+    background: var(--surface);
+  }
+
+  .search-prefix {
+    background: var(--blue-dim);
+    color: var(--accent);
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    padding: 0 0.9rem;
+    display: flex;
+    align-items: center;
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+    flex-shrink: 0;
+    border-right: 1px solid var(--border2);
+  }
+
+  .search-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--text-bright);
+    font-family: var(--mono);
+    font-size: 0.9rem;
+    padding: 0.75rem 1rem;
+    letter-spacing: 0.05em;
+    caret-color: var(--accent);
+  }
+
+  .search-input::placeholder {
+    color: var(--text-dim);
+    opacity: 0.6;
+  }
+
+  .search-btn {
+    background: var(--blue);
+    border: none;
+    color: #fff;
+    font-family: var(--ui);
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 0 1.5rem;
+    cursor: pointer;
+    transition: background 0.15s;
+    white-space: nowrap;
+  }
+
+  .search-btn:hover { background: var(--blue-bright); }
+  .search-btn:active { background: var(--blue-dim); }
+
+  .search-hint {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    color: var(--text-dim);
+    margin-top: 0.5rem;
+    letter-spacing: 0.06em;
+  }
+
+  /* Divider */
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1.25rem;
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    color: var(--text-dim);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+
+  .divider::before, .divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* Results */
+  .results-meta {
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    color: var(--text-dim);
+    letter-spacing: 0.1em;
+    margin-bottom: 1rem;
+  }
+
+  .results-meta span {
+    color: var(--accent);
+  }
+
+  .file-list {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .file-row {
+    display: flex;
+    align-items: stretch;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    transition: border-color 0.15s, background 0.15s;
+    cursor: pointer;
+    text-decoration: none;
+  }
+
+  .file-row:hover {
+    border-color: var(--blue);
+    background: var(--surface2);
+  }
+
+  .file-row:hover .file-arrow {
+    color: var(--accent);
+  }
+
+  .file-stripe {
+    width: 4px;
+    background: var(--blue-dim);
+    flex-shrink: 0;
+    transition: background 0.15s;
+  }
+
+  .file-row:hover .file-stripe {
+    background: var(--blue-bright);
+  }
+
+  .file-icon {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 0.75rem;
+    color: var(--text-dim);
+    flex-shrink: 0;
+  }
+
+  .file-icon svg {
+    width: 18px;
+    height: 18px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.5;
+  }
+
+  .file-body {
+    flex: 1;
+    padding: 0.75rem 0.5rem 0.75rem 0;
+  }
+
+  .file-name {
+    font-family: var(--mono);
+    font-size: 0.85rem;
+    color: var(--text-bright);
+    letter-spacing: 0.04em;
+    margin-bottom: 2px;
+  }
+
+  .file-name mark {
+    background: transparent;
+    color: var(--accent);
+    font-weight: inherit;
+  }
+
+  .file-meta {
+    font-family: var(--mono);
+    font-size: 0.62rem;
+    color: var(--text-dim);
+    letter-spacing: 0.08em;
+    display: flex;
+    gap: 1rem;
+  }
+
+  .file-tag {
+    display: inline-block;
+    background: var(--blue-dim);
+    color: var(--accent);
+    font-family: var(--mono);
+    font-size: 0.58rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 1px 6px;
+    margin-left: 0.5rem;
+    vertical-align: middle;
+  }
+
+  .file-arrow {
+    display: flex;
+    align-items: center;
+    padding: 0 1rem;
+    color: var(--text-dim);
+    font-size: 1rem;
+    transition: color 0.15s;
+    flex-shrink: 0;
+  }
+
+  /* Empty / no results */
+  .state-empty {
+    text-align: center;
+    padding: 3rem 1rem;
+    font-family: var(--mono);
+    color: var(--text-dim);
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    line-height: 2;
+  }
+
+  .state-empty .code {
+    display: block;
+    font-size: 2rem;
+    color: var(--border2);
+    margin-bottom: 0.5rem;
+  }
+
+  /* Footer */
+  .footer {
+    margin-top: 3rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--mono);
+    font-size: 0.62rem;
+    color: var(--text-dim);
+    letter-spacing: 0.1em;
+  }
+
+  /* Classified banner */
+  .classified-banner {
+    border: 1px solid var(--border2);
+    background: rgba(26,47,74,0.2);
+    padding: 0.5rem 1rem;
+    margin-bottom: 1.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    color: var(--text-dim);
+    letter-spacing: 0.1em;
+  }
+
+  .classified-label {
+    color: var(--accent);
+    letter-spacing: 0.2em;
+    font-weight: 600;
+    flex-shrink: 0;
+  }
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <!-- Header -->
+  <header class="header">
+    <div class="header-top">
+      <div class="badge">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 2L3 7v5c0 5.25 3.75 10.15 9 11.25C17.25 22.15 21 17.25 21 12V7L12 2z"/>
+        </svg>
+      </div>
+      <div>
+        <div class="agency-name">NEBCU</div>
+        <div class="agency-sub">National Evidence Bureau — Case Unit // Restricted Access</div>
+      </div>
+    </div>
+    <div class="status-bar">
+      <span><span class="status-dot"></span>SYSTEM ONLINE</span>
+      <span id="clock"></span>
+      <span>NODE: NEB-07 // SECURE</span>
+    </div>
+  </header>
+
+  <!-- Classified banner -->
+  <div class="classified-banner">
+    <span class="classified-label">// RESTRICTED //</span>
+    <span>Authorised personnel only. All access is logged and monitored. Misuse constitutes a criminal offence under the Evidence Protection Act.</span>
+  </div>
+
+  <!-- Search -->
+  <section class="search-section">
+    <label class="search-label" for="searchInput">Evidence file search</label>
+    <div class="search-row">
+      <span class="search-prefix">QUERY &gt;</span>
+      <input
+        class="search-input"
+        id="searchInput"
+        type="text"
+        placeholder="enter file designation or keyword..."
+        autocomplete="off"
+        spellcheck="false"
+      />
+      <button class="search-btn" id="searchBtn">Execute</button>
+    </div>
+    <div class="search-hint">// enter partial or full file name — results update on search</div>
+  </section>
+
+  <!-- Results -->
+  <div class="divider">Evidence records</div>
+
+  <div id="resultsMeta" class="results-meta" style="display:none;"></div>
+  <div id="fileList" class="file-list"></div>
+  <div id="stateEmpty" class="state-empty">
+    <span class="code">[ — ]</span>
+    Awaiting query. Enter a file designation above to retrieve evidence records.
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <span>NEBCU DATABASE v4.1 // ENCRYPTED CHANNEL</span>
+    <span id="footerDate"></span>
+  </footer>
+
+</div>
+
+<script>
+  // ============================================================
+  // FILE DATABASE
+  // Edit this array to add/remove files.
+  //
+  // Each entry:
+  //   name: string shown in the list (searched against)
+  //   file: path to PDF (relative to index.html, or full URL)
+  //   tag:  optional classification label e.g. "EVIDENCE", "WITNESS", "CLASSIFIED"
+  //   date: log date shown in the file meta row
+  //   ref:  case reference number shown in meta
+  // ============================================================
+  const FILES = [
+    {
+      name: "POST-MORTEM REPORT — VICTIM A",
+      file: "files/post-mortem-victim-a.pdf",
+      tag: "EVIDENCE",
+      date: "2024-03-12",
+      ref: "NEB-0042"
+    },
+    {
+      name: "WITNESS STATEMENT — CHEN, MARCUS",
+      file: "files/witness-chen-marcus.pdf",
+      tag: "WITNESS",
+      date: "2024-03-13",
+      ref: "NEB-0043"
+    },
+    {
+      name: "FORENSICS LAB REPORT — SUBSTANCE X",
+      file: "files/forensics-substance-x.pdf",
+      tag: "FORENSICS",
+      date: "2024-03-14",
+      ref: "NEB-0044"
+    },
+    {
+      name: "CRIME SCENE PHOTOGRAPHS — SUITE 304",
+      file: "files/crime-scene-suite-304.pdf",
+      tag: "EVIDENCE",
+      date: "2024-03-14",
+      ref: "NEB-0045"
+    },
+    {
+      name: "FINANCIAL RECORDS — HARLOW INDUSTRIES",
+      file: "files/financial-harlow-industries.pdf",
+      tag: "CLASSIFIED",
+      date: "2024-03-15",
+      ref: "NEB-0046"
+    },
+    {
+      name: "TELEPHONE INTERCEPT — 14 MARCH",
+      file: "files/telephone-intercept-14march.pdf",
+      tag: "CLASSIFIED",
+      date: "2024-03-15",
+      ref: "NEB-0047"
+    },
+    {
+      name: "TOXICOLOGY REPORT — VICTIM A",
+      file: "files/toxicology-victim-a.pdf",
+      tag: "FORENSICS",
+      date: "2024-03-15",
+      ref: "NEB-0048"
+    },
+    {
+      name: "SUSPECT PROFILE — UNKNOWN MALE",
+      file: "files/suspect-profile-unknown-male.pdf",
+      tag: "SUSPECT",
+      date: "2024-03-16",
+      ref: "NEB-0049"
+    }
+  ];
+  // ============================================================
+
+  function highlight(text, query) {
+    if (!query) return text;
+    const escaped = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    return text.replace(new RegExp(`(${escaped})`, 'gi'), '<mark>$1</mark>');
+  }
+
+  function renderFiles(query) {
+    const list = document.getElementById('fileList');
+    const meta = document.getElementById('resultsMeta');
+    const empty = document.getElementById('stateEmpty');
+
+    const q = query.trim().toLowerCase();
+    const results = q
+      ? FILES.filter(f => f.name.toLowerCase().includes(q))
+      : [];
+
+    list.innerHTML = '';
+
+    if (!q) {
+      meta.style.display = 'none';
+      empty.innerHTML = '<span class="code">[ — ]</span>Awaiting query. Enter a file designation above to retrieve evidence records.';
+      empty.style.display = 'block';
+      return;
+    }
+
+    if (results.length === 0) {
+      meta.style.display = 'none';
+      empty.innerHTML = '<span class="code">404</span>No records match designation &ldquo;' + escapeHtml(query) + '&rdquo;. Verify file name and retry.';
+      empty.style.display = 'block';
+      return;
+    }
+
+    empty.style.display = 'none';
+    meta.style.display = 'block';
+    meta.innerHTML = 'Query returned <span>' + results.length + '</span> record' + (results.length !== 1 ? 's' : '') + ' &nbsp;// QUERY: <span>' + escapeHtml(query.toUpperCase()) + '</span>';
+
+    results.forEach(f => {
+      const row = document.createElement('a');
+      row.className = 'file-row';
+      row.href = f.file;
+      row.target = '_blank';
+      row.rel = 'noopener noreferrer';
+
+      const tagHtml = f.tag ? `<span class="file-tag">${f.tag}</span>` : '';
+      const hlName = highlight(f.name, query);
+
+      row.innerHTML = `
+        <div class="file-stripe"></div>
+        <div class="file-icon">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/>
+            <line x1="16" y1="13" x2="8" y2="13"/>
+            <line x1="16" y1="17" x2="8" y2="17"/>
+            <polyline points="10 9 9 9 8 9"/>
+          </svg>
+        </div>
+        <div class="file-body">
+          <div class="file-name">${hlName}${tagHtml}</div>
+          <div class="file-meta">
+            <span>REF: ${f.ref}</span>
+            <span>LOGGED: ${f.date}</span>
+            <span>FORMAT: PDF</span>
+          </div>
+        </div>
+        <div class="file-arrow">&#8599;</div>
+      `;
+
+      list.appendChild(row);
+    });
+  }
+
+  function escapeHtml(str) {
+    return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  document.getElementById('searchBtn').addEventListener('click', () => {
+    renderFiles(document.getElementById('searchInput').value);
+  });
+
+  document.getElementById('searchInput').addEventListener('keydown', e => {
+    if (e.key === 'Enter') renderFiles(e.target.value);
+  });
+
+  // Clock
+  function updateClock() {
+    const now = new Date();
+    const pad = n => String(n).padStart(2,'0');
+    const t = `${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())} UTC`;
+    document.getElementById('clock').textContent = t;
+    const d = `${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())}`;
+    document.getElementById('footerDate').textContent = d;
+  }
+  setInterval(updateClock, 1000);
+  updateClock();
+</script>
+</body>
+</html>
