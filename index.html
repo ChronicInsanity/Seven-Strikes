@@ -9,19 +9,22 @@
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   :root {
-    --bg: #04080f;
-    --surface: #080f1a;
-    --surface2: #0c1525;
-    --border: #1a2e4a;
-    --border2: #1f3a5a;
-    --blue: #1a6fa8;
-    --blue-bright: #2a8fd0;
-    --blue-dim: #0e4a70;
-    --text: #b8d4e8;
-    --text-dim: #5a7a96;
-    --text-bright: #d8edf8;
-    --accent: #00aaff;
-    --danger: #ff4444;
+    --bg: #0a0c10;
+    --surface: #0e1118;
+    --surface2: #131720;
+    --border: #1e2530;
+    --border2: #26303d;
+    --met-blue: #1a3a6b;
+    --met-blue-mid: #1f4a8a;
+    --met-blue-bright: #2a5fa8;
+    --met-silver: #c8d4e0;
+    --met-silver-dim: #7a90a4;
+    --met-silver-faint: #3a4a5a;
+    --text: #b0c4d8;
+    --text-dim: #4e6070;
+    --text-bright: #d4e4f0;
+    --accent: #4a90d0;
+    --accent-bright: #6aaee8;
     --mono: 'Share Tech Mono', monospace;
     --ui: 'Rajdhani', sans-serif;
   }
@@ -35,17 +38,13 @@
     overflow-x: hidden;
   }
 
-  /* scanline overlay */
   body::before {
     content: '';
     position: fixed;
     inset: 0;
     background: repeating-linear-gradient(
-      0deg,
-      transparent,
-      transparent 2px,
-      rgba(0,0,0,0.04) 2px,
-      rgba(0,0,0,0.04) 4px
+      0deg, transparent, transparent 2px,
+      rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px
     );
     pointer-events: none;
     z-index: 1000;
@@ -57,24 +56,23 @@
     padding: 2rem 1.5rem 4rem;
   }
 
-  /* Header */
   .header {
-    border-bottom: 1px solid var(--border2);
+    border-bottom: 2px solid var(--met-blue-mid);
     padding-bottom: 1.5rem;
-    margin-bottom: 2rem;
+    margin-bottom: 1.75rem;
   }
 
   .header-top {
     display: flex;
     align-items: center;
-    gap: 1rem;
-    margin-bottom: 0.75rem;
+    gap: 1.1rem;
+    margin-bottom: 0.8rem;
   }
 
   .badge {
-    width: 48px;
-    height: 48px;
-    border: 2px solid var(--blue-bright);
+    width: 52px;
+    height: 52px;
+    border: 2px solid var(--met-blue-bright);
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -88,30 +86,29 @@
     position: absolute;
     inset: 3px;
     border-radius: 50%;
-    border: 1px solid var(--blue-dim);
+    border: 1px solid var(--met-blue);
   }
 
   .badge svg {
-    width: 20px;
-    height: 20px;
-    fill: var(--blue-bright);
+    width: 22px;
+    height: 22px;
+    fill: var(--met-silver);
   }
 
   .agency-name {
     font-family: var(--mono);
-    font-size: 1.4rem;
-    color: var(--accent);
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
+    font-size: 1.45rem;
+    color: var(--met-silver);
+    letter-spacing: 0.14em;
   }
 
   .agency-sub {
     font-family: var(--mono);
-    font-size: 0.7rem;
-    color: var(--text-dim);
-    letter-spacing: 0.18em;
+    font-size: 0.65rem;
+    color: var(--met-silver-dim);
+    letter-spacing: 0.16em;
     text-transform: uppercase;
-    margin-top: 2px;
+    margin-top: 3px;
   }
 
   .status-bar {
@@ -119,9 +116,10 @@
     align-items: center;
     gap: 1.5rem;
     font-family: var(--mono);
-    font-size: 0.7rem;
+    font-size: 0.65rem;
     color: var(--text-dim);
     letter-spacing: 0.1em;
+    flex-wrap: wrap;
   }
 
   .status-dot {
@@ -129,25 +127,40 @@
     width: 6px;
     height: 6px;
     border-radius: 50%;
-    background: #00cc66;
+    background: #44bb77;
     margin-right: 5px;
-    animation: pulse 2.5s ease-in-out infinite;
+    animation: blink 2.5s ease-in-out infinite;
   }
 
-  @keyframes pulse {
+  @keyframes blink {
     0%, 100% { opacity: 1; }
-    50% { opacity: 0.4; }
+    50% { opacity: 0.3; }
   }
 
-  /* Search area */
-  .search-section {
-    margin-bottom: 2rem;
+  .notice-banner {
+    border-left: 3px solid var(--met-blue-mid);
+    background: rgba(26, 58, 107, 0.18);
+    padding: 0.6rem 1rem;
+    margin-bottom: 1.75rem;
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    color: var(--met-silver-dim);
+    letter-spacing: 0.09em;
+    line-height: 1.8;
   }
+
+  .notice-banner strong {
+    color: var(--met-silver);
+    font-weight: 400;
+    letter-spacing: 0.15em;
+  }
+
+  .search-section { margin-bottom: 2rem; }
 
   .search-label {
     font-family: var(--mono);
-    font-size: 0.68rem;
-    color: var(--text-dim);
+    font-size: 0.65rem;
+    color: var(--met-silver-dim);
     letter-spacing: 0.2em;
     text-transform: uppercase;
     margin-bottom: 0.5rem;
@@ -156,20 +169,19 @@
 
   .search-row {
     display: flex;
-    gap: 0;
     border: 1px solid var(--border2);
     background: var(--surface);
   }
 
   .search-prefix {
-    background: var(--blue-dim);
-    color: var(--accent);
+    background: var(--met-blue);
+    color: var(--met-silver);
     font-family: var(--mono);
-    font-size: 0.8rem;
-    padding: 0 0.9rem;
+    font-size: 0.75rem;
+    padding: 0 1rem;
     display: flex;
     align-items: center;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.06em;
     white-space: nowrap;
     flex-shrink: 0;
     border-right: 1px solid var(--border2);
@@ -185,22 +197,23 @@
     font-size: 0.9rem;
     padding: 0.75rem 1rem;
     letter-spacing: 0.05em;
-    caret-color: var(--accent);
+    caret-color: var(--accent-bright);
   }
 
   .search-input::placeholder {
     color: var(--text-dim);
-    opacity: 0.6;
+    opacity: 0.7;
   }
 
   .search-btn {
-    background: var(--blue);
+    background: var(--met-blue-mid);
     border: none;
-    color: #fff;
+    border-left: 1px solid var(--border2);
+    color: var(--met-silver);
     font-family: var(--ui);
-    font-size: 0.8rem;
+    font-size: 0.78rem;
     font-weight: 600;
-    letter-spacing: 0.15em;
+    letter-spacing: 0.16em;
     text-transform: uppercase;
     padding: 0 1.5rem;
     cursor: pointer;
@@ -208,27 +221,26 @@
     white-space: nowrap;
   }
 
-  .search-btn:hover { background: var(--blue-bright); }
-  .search-btn:active { background: var(--blue-dim); }
+  .search-btn:hover { background: var(--met-blue-bright); }
+  .search-btn:active { background: var(--met-blue); }
 
   .search-hint {
     font-family: var(--mono);
-    font-size: 0.65rem;
+    font-size: 0.62rem;
     color: var(--text-dim);
     margin-top: 0.5rem;
     letter-spacing: 0.06em;
   }
 
-  /* Divider */
   .divider {
     display: flex;
     align-items: center;
     gap: 0.75rem;
     margin-bottom: 1.25rem;
     font-family: var(--mono);
-    font-size: 0.65rem;
+    font-size: 0.62rem;
     color: var(--text-dim);
-    letter-spacing: 0.15em;
+    letter-spacing: 0.18em;
     text-transform: uppercase;
   }
 
@@ -239,24 +251,17 @@
     background: var(--border);
   }
 
-  /* Results */
   .results-meta {
     font-family: var(--mono);
-    font-size: 0.68rem;
+    font-size: 0.65rem;
     color: var(--text-dim);
     letter-spacing: 0.1em;
-    margin-bottom: 1rem;
+    margin-bottom: 0.75rem;
   }
 
-  .results-meta span {
-    color: var(--accent);
-  }
+  .results-meta span { color: var(--accent-bright); }
 
-  .file-list {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-  }
+  .file-list { display: flex; flex-direction: column; gap: 2px; }
 
   .file-row {
     display: flex;
@@ -269,32 +274,29 @@
   }
 
   .file-row:hover {
-    border-color: var(--blue);
+    border-color: var(--met-blue-mid);
     background: var(--surface2);
-  }
-
-  .file-row:hover .file-arrow {
-    color: var(--accent);
   }
 
   .file-stripe {
     width: 4px;
-    background: var(--blue-dim);
+    background: var(--met-blue);
     flex-shrink: 0;
     transition: background 0.15s;
   }
 
-  .file-row:hover .file-stripe {
-    background: var(--blue-bright);
-  }
+  .file-row:hover .file-stripe { background: var(--met-blue-bright); }
 
   .file-icon {
     display: flex;
     align-items: center;
-    padding: 0.75rem 0.75rem;
-    color: var(--text-dim);
+    padding: 0.9rem 0.75rem;
+    color: var(--met-silver-faint);
     flex-shrink: 0;
+    transition: color 0.15s;
   }
+
+  .file-row:hover .file-icon { color: var(--met-silver-dim); }
 
   .file-icon svg {
     width: 18px;
@@ -306,42 +308,38 @@
 
   .file-body {
     flex: 1;
-    padding: 0.75rem 0.5rem 0.75rem 0;
+    padding: 0.9rem 0.5rem 0.9rem 0;
   }
 
   .file-name {
     font-family: var(--mono);
-    font-size: 0.85rem;
+    font-size: 0.9rem;
     color: var(--text-bright);
-    letter-spacing: 0.04em;
-    margin-bottom: 2px;
-  }
-
-  .file-name mark {
-    background: transparent;
-    color: var(--accent);
-    font-weight: inherit;
+    letter-spacing: 0.06em;
+    margin-bottom: 4px;
   }
 
   .file-meta {
     font-family: var(--mono);
-    font-size: 0.62rem;
+    font-size: 0.6rem;
     color: var(--text-dim);
     letter-spacing: 0.08em;
     display: flex;
     gap: 1rem;
+    flex-wrap: wrap;
   }
 
   .file-tag {
     display: inline-block;
-    background: var(--blue-dim);
+    background: rgba(26, 58, 107, 0.5);
     color: var(--accent);
+    border: 1px solid var(--met-blue);
     font-family: var(--mono);
-    font-size: 0.58rem;
+    font-size: 0.55rem;
     letter-spacing: 0.12em;
     text-transform: uppercase;
     padding: 1px 6px;
-    margin-left: 0.5rem;
+    margin-left: 0.6rem;
     vertical-align: middle;
   }
 
@@ -349,31 +347,34 @@
     display: flex;
     align-items: center;
     padding: 0 1rem;
-    color: var(--text-dim);
+    color: var(--met-silver-faint);
     font-size: 1rem;
-    transition: color 0.15s;
     flex-shrink: 0;
+    transition: color 0.15s;
   }
 
-  /* Empty / no results */
-  .state-empty {
+  .file-row:hover .file-arrow { color: var(--accent-bright); }
+
+  .state-box {
     text-align: center;
     padding: 3rem 1rem;
     font-family: var(--mono);
     color: var(--text-dim);
-    font-size: 0.75rem;
+    font-size: 0.72rem;
     letter-spacing: 0.1em;
-    line-height: 2;
+    line-height: 2.2;
+    border: 1px solid var(--border);
+    background: var(--surface);
   }
 
-  .state-empty .code {
+  .state-code {
     display: block;
-    font-size: 2rem;
+    font-size: 1.8rem;
     color: var(--border2);
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.4rem;
+    letter-spacing: 0.2em;
   }
 
-  /* Footer */
   .footer {
     margin-top: 3rem;
     padding-top: 1rem;
@@ -381,38 +382,17 @@
     display: flex;
     justify-content: space-between;
     font-family: var(--mono);
-    font-size: 0.62rem;
+    font-size: 0.6rem;
     color: var(--text-dim);
     letter-spacing: 0.1em;
-  }
-
-  /* Classified banner */
-  .classified-banner {
-    border: 1px solid var(--border2);
-    background: rgba(26,47,74,0.2);
-    padding: 0.5rem 1rem;
-    margin-bottom: 1.75rem;
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    font-family: var(--mono);
-    font-size: 0.65rem;
-    color: var(--text-dim);
-    letter-spacing: 0.1em;
-  }
-
-  .classified-label {
-    color: var(--accent);
-    letter-spacing: 0.2em;
-    font-weight: 600;
-    flex-shrink: 0;
+    flex-wrap: wrap;
+    gap: 0.5rem;
   }
 </style>
 </head>
 <body>
 <div class="shell">
 
-  <!-- Header -->
   <header class="header">
     <div class="header-top">
       <div class="badge">
@@ -422,222 +402,165 @@
       </div>
       <div>
         <div class="agency-name">NEBCU</div>
-        <div class="agency-sub">National Evidence Bureau — Case Unit // Restricted Access</div>
+        <div class="agency-sub">National Evidence Bureau — Case Unit &nbsp;//&nbsp; Restricted Access Portal</div>
       </div>
     </div>
     <div class="status-bar">
-      <span><span class="status-dot"></span>SYSTEM ONLINE</span>
+      <span><span class="status-dot"></span>SYSTEM OPERATIONAL</span>
       <span id="clock"></span>
-      <span>NODE: NEB-07 // SECURE</span>
+      <span>NODE: NEB-07 &nbsp;//&nbsp; ENCRYPTED</span>
     </div>
   </header>
 
-  <!-- Classified banner -->
-  <div class="classified-banner">
-    <span class="classified-label">// RESTRICTED //</span>
-    <span>Authorised personnel only. All access is logged and monitored. Misuse constitutes a criminal offence under the Evidence Protection Act.</span>
+  <div class="notice-banner">
+    <strong>// RESTRICTED ACCESS //</strong> &nbsp;This terminal is for authorised personnel only. All queries are logged, timestamped and audited. Unauthorised access or misuse constitutes a criminal offence. Enter the exact file designation to retrieve a record.
   </div>
 
-  <!-- Search -->
   <section class="search-section">
-    <label class="search-label" for="searchInput">Evidence file search</label>
+    <label class="search-label" for="searchInput">File designation</label>
     <div class="search-row">
       <span class="search-prefix">QUERY &gt;</span>
       <input
         class="search-input"
         id="searchInput"
         type="text"
-        placeholder="enter file designation or keyword..."
+        placeholder="enter exact file designation..."
         autocomplete="off"
         spellcheck="false"
       />
       <button class="search-btn" id="searchBtn">Execute</button>
     </div>
-    <div class="search-hint">// enter partial or full file name — results update on search</div>
+
   </section>
 
-  <!-- Results -->
   <div class="divider">Evidence records</div>
 
   <div id="resultsMeta" class="results-meta" style="display:none;"></div>
   <div id="fileList" class="file-list"></div>
-  <div id="stateEmpty" class="state-empty">
-    <span class="code">[ — ]</span>
-    Awaiting query. Enter a file designation above to retrieve evidence records.
+  <div id="stateBox" class="state-box">
+    <span class="state-code">[ &mdash; ]</span>
+    Awaiting query.<br>Enter exact file designation above to retrieve record.
   </div>
 
-  <!-- Footer -->
   <footer class="footer">
-    <span>NEBCU DATABASE v4.1 // ENCRYPTED CHANNEL</span>
+    <span>NEBCU DATABASE v4.1 &nbsp;//&nbsp; SECURE CHANNEL &nbsp;//&nbsp; ALL ACCESS LOGGED</span>
     <span id="footerDate"></span>
   </footer>
 
 </div>
 
 <script>
-  // ============================================================
-  // FILE DATABASE
-  // Edit this array to add/remove files.
-  //
-  // Each entry:
-  //   name: string shown in the list (searched against)
-  //   file: path to PDF (relative to index.html, or full URL)
-  //   tag:  optional classification label e.g. "EVIDENCE", "WITNESS", "CLASSIFIED"
-  //   date: log date shown in the file meta row
-  //   ref:  case reference number shown in meta
-  // ============================================================
   const FILES = [
-    {
-      name: "POST-MORTEM REPORT — VICTIM A",
-      file: "files/post-mortem-victim-a.pdf",
-      tag: "EVIDENCE",
-      date: "2024-03-12",
-      ref: "NEB-0042"
-    },
-    {
-      name: "WITNESS STATEMENT — CHEN, MARCUS",
-      file: "files/witness-chen-marcus.pdf",
-      tag: "WITNESS",
-      date: "2024-03-13",
-      ref: "NEB-0043"
-    },
-    {
-      name: "FORENSICS LAB REPORT — SUBSTANCE X",
-      file: "files/forensics-substance-x.pdf",
-      tag: "FORENSICS",
-      date: "2024-03-14",
-      ref: "NEB-0044"
-    },
-    {
-      name: "CRIME SCENE PHOTOGRAPHS — SUITE 304",
-      file: "files/crime-scene-suite-304.pdf",
-      tag: "EVIDENCE",
-      date: "2024-03-14",
-      ref: "NEB-0045"
-    },
-    {
-      name: "FINANCIAL RECORDS — HARLOW INDUSTRIES",
-      file: "files/financial-harlow-industries.pdf",
-      tag: "CLASSIFIED",
-      date: "2024-03-15",
-      ref: "NEB-0046"
-    },
-    {
-      name: "TELEPHONE INTERCEPT — 14 MARCH",
-      file: "files/telephone-intercept-14march.pdf",
-      tag: "CLASSIFIED",
-      date: "2024-03-15",
-      ref: "NEB-0047"
-    },
-    {
-      name: "TOXICOLOGY REPORT — VICTIM A",
-      file: "files/toxicology-victim-a.pdf",
-      tag: "FORENSICS",
-      date: "2024-03-15",
-      ref: "NEB-0048"
-    },
-    {
-      name: "SUSPECT PROFILE — UNKNOWN MALE",
-      file: "files/suspect-profile-unknown-male.pdf",
-      tag: "SUSPECT",
-      date: "2024-03-16",
-      ref: "NEB-0049"
-    }
+    { name: "EIF - CJ",  file: "files/EIF - CJ.pdf",  tag: "EIF",  ref: "NEB-0101" },
+    { name: "EIF - MD",  file: "files/EIF - MD.pdf",  tag: "EIF",  ref: "NEB-0102" },
+    { name: "EIF - NC",  file: "files/EIF - NC.pdf",  tag: "EIF",  ref: "NEB-0103" },
+    { name: "EIF - RS",  file: "files/EIF - RS.pdf",  tag: "EIF",  ref: "NEB-0104" },
+    { name: "IR - CJ",   file: "files/IR - CJ.pdf",   tag: "IR",   ref: "NEB-0105" },
+    { name: "IR - GC",   file: "files/IR - GC.pdf",   tag: "IR",   ref: "NEB-0106" },
+    { name: "IR - NC",   file: "files/IR - NC.pdf",   tag: "IR",   ref: "NEB-0107" },
+    { name: "IR - XR",   file: "files/IR - XR.pdf",   tag: "IR",   ref: "NEB-0108" },
+    { name: "LP - MD1",  file: "files/LP - MD1.pdf",  tag: "LP",   ref: "NEB-0109" },
+    { name: "LP - MD2",  file: "files/LP - MD2.pdf",  tag: "LP",   ref: "NEB-0110" },
+    { name: "LP - MD3",  file: "files/LP - MD3.pdf",  tag: "LP",   ref: "NEB-0111" },
+    { name: "NL - 67",   file: "files/NL - 67.pdf",   tag: "NL",   ref: "NEB-0112" },
+    { name: "NL - 71",   file: "files/NL - 71.pdf",   tag: "NL",   ref: "NEB-0113" },
+    { name: "OHA - NC",  file: "files/OHA - NC.pdf",  tag: "OHA",  ref: "NEB-0114" },
+    { name: "WS - CJ1",  file: "files/WS - CJ1.pdf",  tag: "WS",   ref: "NEB-0115" },
+    { name: "WS - CJ2",  file: "files/WS - CJ2.pdf",  tag: "WS",   ref: "NEB-0116" },
+    { name: "WS - CJ3",  file: "files/WS - CJ3.pdf",  tag: "WS",   ref: "NEB-0117" },
+    { name: "WS - MD",   file: "files/WS - MD.pdf",   tag: "WS",   ref: "NEB-0118" },
+    { name: "WS - NC1",  file: "files/WS - NC1.pdf",  tag: "WS",   ref: "NEB-0119" },
+    { name: "WS - NC2",  file: "files/WS - NC2.pdf",  tag: "WS",   ref: "NEB-0120" },
+    { name: "WS - NC3",  file: "files/WS - NC3.pdf",  tag: "WS",   ref: "NEB-0121" },
+    { name: "WS - RS1",  file: "files/WS - RS1.pdf",  tag: "WS",   ref: "NEB-0122" },
+    { name: "WS - RS2",  file: "files/WS - RS2.pdf",  tag: "WS",   ref: "NEB-0123" },
+    { name: "WS - RS3",  file: "files/WS - RS3.pdf",  tag: "WS",   ref: "NEB-0124" },
+    { name: "WWN - 12",  file: "files/WWN - 12.pdf",  tag: "WWN",  ref: "NEB-0125" },
   ];
-  // ============================================================
-
-  function highlight(text, query) {
-    if (!query) return text;
-    const escaped = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-    return text.replace(new RegExp(`(${escaped})`, 'gi'), '<mark>$1</mark>');
-  }
-
-  function renderFiles(query) {
-    const list = document.getElementById('fileList');
-    const meta = document.getElementById('resultsMeta');
-    const empty = document.getElementById('stateEmpty');
-
-    const q = query.trim().toLowerCase();
-    const results = q
-      ? FILES.filter(f => f.name.toLowerCase().includes(q))
-      : [];
-
-    list.innerHTML = '';
-
-    if (!q) {
-      meta.style.display = 'none';
-      empty.innerHTML = '<span class="code">[ — ]</span>Awaiting query. Enter a file designation above to retrieve evidence records.';
-      empty.style.display = 'block';
-      return;
-    }
-
-    if (results.length === 0) {
-      meta.style.display = 'none';
-      empty.innerHTML = '<span class="code">404</span>No records match designation &ldquo;' + escapeHtml(query) + '&rdquo;. Verify file name and retry.';
-      empty.style.display = 'block';
-      return;
-    }
-
-    empty.style.display = 'none';
-    meta.style.display = 'block';
-    meta.innerHTML = 'Query returned <span>' + results.length + '</span> record' + (results.length !== 1 ? 's' : '') + ' &nbsp;// QUERY: <span>' + escapeHtml(query.toUpperCase()) + '</span>';
-
-    results.forEach(f => {
-      const row = document.createElement('a');
-      row.className = 'file-row';
-      row.href = f.file;
-      row.target = '_blank';
-      row.rel = 'noopener noreferrer';
-
-      const tagHtml = f.tag ? `<span class="file-tag">${f.tag}</span>` : '';
-      const hlName = highlight(f.name, query);
-
-      row.innerHTML = `
-        <div class="file-stripe"></div>
-        <div class="file-icon">
-          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-            <polyline points="14 2 14 8 20 8"/>
-            <line x1="16" y1="13" x2="8" y2="13"/>
-            <line x1="16" y1="17" x2="8" y2="17"/>
-            <polyline points="10 9 9 9 8 9"/>
-          </svg>
-        </div>
-        <div class="file-body">
-          <div class="file-name">${hlName}${tagHtml}</div>
-          <div class="file-meta">
-            <span>REF: ${f.ref}</span>
-            <span>LOGGED: ${f.date}</span>
-            <span>FORMAT: PDF</span>
-          </div>
-        </div>
-        <div class="file-arrow">&#8599;</div>
-      `;
-
-      list.appendChild(row);
-    });
-  }
 
   function escapeHtml(str) {
     return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
   }
 
+  function renderResult(query) {
+    const list  = document.getElementById('fileList');
+    const meta  = document.getElementById('resultsMeta');
+    const state = document.getElementById('stateBox');
+
+    list.innerHTML = '';
+    meta.style.display = 'none';
+
+    const q = query.trim();
+
+    if (!q) {
+      state.innerHTML = '<span class="state-code">[ &mdash; ]</span>Awaiting query.<br>Enter exact file designation above to retrieve record.';
+      state.style.display = 'block';
+      return;
+    }
+
+    // Normalise: collapse spaces around hyphens and strip all spaces for loose matching
+    const normalise = s => s.toLowerCase().replace(/\s*-\s*/g, '-').replace(/\s+/g, '');
+    const match = FILES.find(f =>
+      f.name.toLowerCase() === q.toLowerCase() ||
+      normalise(f.name) === normalise(q)
+    );
+
+    if (!match) {
+      state.innerHTML = '<span class="state-code">NO RECORD</span>No file matching designation &ldquo;' + escapeHtml(q) + '&rdquo; was found.<br>Verify designation and resubmit.';
+      state.style.display = 'block';
+      return;
+    }
+
+    state.style.display = 'none';
+    meta.style.display = 'block';
+    meta.innerHTML = 'Record retrieved &nbsp;// DESIGNATION: <span>' + escapeHtml(match.name.toUpperCase()) + '</span>';
+
+    const row = document.createElement('a');
+    row.className = 'file-row';
+    row.href = match.file;
+    row.target = '_blank';
+    row.rel = 'noopener noreferrer';
+
+    row.innerHTML = `
+      <div class="file-stripe"></div>
+      <div class="file-icon">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+          <polyline points="14 2 14 8 20 8"/>
+          <line x1="16" y1="13" x2="8" y2="13"/>
+          <line x1="16" y1="17" x2="8" y2="17"/>
+          <polyline points="10 9 9 9 8 9"/>
+        </svg>
+      </div>
+      <div class="file-body">
+        <div class="file-name">${escapeHtml(match.name)}<span class="file-tag">${escapeHtml(match.tag)}</span></div>
+        <div class="file-meta">
+          <span>REF: ${escapeHtml(match.ref)}</span>
+          <span>FORMAT: PDF</span>
+          <span>STATUS: DECLASSIFIED</span>
+        </div>
+      </div>
+      <div class="file-arrow">&#8599;</div>
+    `;
+
+    list.appendChild(row);
+  }
+
   document.getElementById('searchBtn').addEventListener('click', () => {
-    renderFiles(document.getElementById('searchInput').value);
+    renderResult(document.getElementById('searchInput').value);
   });
 
   document.getElementById('searchInput').addEventListener('keydown', e => {
-    if (e.key === 'Enter') renderFiles(e.target.value);
+    if (e.key === 'Enter') renderResult(e.target.value);
   });
 
-  // Clock
   function updateClock() {
     const now = new Date();
     const pad = n => String(n).padStart(2,'0');
-    const t = `${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())} UTC`;
-    document.getElementById('clock').textContent = t;
-    const d = `${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())}`;
-    document.getElementById('footerDate').textContent = d;
+    document.getElementById('clock').textContent =
+      `${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())} UTC`;
+    document.getElementById('footerDate').textContent =
+      `${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())}`;
   }
   setInterval(updateClock, 1000);
   updateClock();
